@@ -9,7 +9,7 @@ import javax.security.auth.login.LoginException;
 public class Dimpus {
     public static final String prefix = "!";
     public static void main(String[] args) throws LoginException {
-        JDA jda = JDABuilder.createDefault("ODI0MTM4NTY3NzkzMzc3MzEx.YFrA2g.HoQ0Q4p87e_AAxXLCSBUnd1rMOI").build();
+        JDA jda = JDABuilder.createDefault("token").build();
         jda.addEventListener(new Listener());
     }
 
