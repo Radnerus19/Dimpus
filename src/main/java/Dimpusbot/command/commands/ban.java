@@ -16,7 +16,7 @@ public class ban implements Command {
 
 
     @Override
-    public void handle(CommandContext ctx) throws NullPointerException {
+    public void handle(CommandContext ctx){
         if(!ctx.getMessage().getMember().hasPermission(Permission.BAN_MEMBERS)) return;
         String[] message = ctx.getMessage().getContentRaw().split("\\s+");
         MessageChannel channel = ctx.getMessage().getChannel();
@@ -25,11 +25,18 @@ public class ban implements Command {
 
         String reason = String.join(" ",Arrays.copyOfRange(message,2,message.length));
         try {
-            banMember = ctx.getMessage().getGuild().getMemberById(message[1]);
+            banMember = ctx.getMessage().getGuild().getMemberCache().getElementById(message[1]);
         }
-        catch(NullPointerException err){
-            channel.sendMessage("The provided ID is not a valid Member ID.").queue();
+        catch(NumberFormatException err){
+            channel.sendMessage("The specified ID is not a valid snowflake (" +message[1]+").").queue();
+            return;
         }
+        if(banMember==null) {
+            channel.sendMessage("The provided ID is not a valid Snowflake.").queue();
+            return;
+        }
+        if(banMember.hasPermission(Permission.KICK_MEMBERS,Permission.BAN_MEMBERS )) return;
+        if(invokeUser.getId().equals(banMember.getId())) return;
         if(reason.equals("")){
             reason = "No reason provided";
         }
@@ -38,10 +45,10 @@ public class ban implements Command {
         .setAuthor(invokeUser.getAsTag()+" ("+invokeUser.getId()+")",null,invokeUser.getAvatarUrl())
         .setDescription("**Member:** `"+banMember.getUser().getAsTag()+"` ("+banMember.getUser().getId()+")\n" +
                 "**Action:** Ban\n"+"**Reason:** "+reason)
-        .setThumbnail(banMember.getUser().getAvatarUrl())
+        .setThumbnail(banMember.getUser().getDefaultAvatarUrl())
         .setFooter("Invoked by "+invokeUser.getName()).setTimestamp(Instant.now())
         .setColor(Color.red).build()).queue();
-        banMember.ban(5,reason).queue();
+        ctx.getMessage().getGuild().ban(banMember,5,reason).queue();
     }
 
     @Override
