@@ -3,6 +3,7 @@ package Dimpusbot;
 import Dimpusbot.command.Command;
 import Dimpusbot.command.CommandContext;
 import Dimpusbot.command.commands.ban;
+import Dimpusbot.command.commands.kick;
 import Dimpusbot.command.commands.ping;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
@@ -18,6 +19,7 @@ public class CommandManager {
     public CommandManager(){
         addCommand(new ping());
         addCommand(new ban());
+        addCommand(new kick());
     }
 
     private void addCommand(Command cmd){
