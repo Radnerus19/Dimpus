@@ -16,12 +16,16 @@ public class ban implements Command {
 
 
     @Override
-    public void handle(CommandContext ctx){
+    public void handle(CommandContext ctx,String[] args){
         if(!ctx.getMessage().getMember().hasPermission(Permission.BAN_MEMBERS)) return;
         String[] message = ctx.getMessage().getContentRaw().split("\\s+");
         MessageChannel channel = ctx.getMessage().getChannel();
         User invokeUser = ctx.getMessage().getMember().getUser();
         Member banMember = null;
+        if(message.length<2){
+            channel.sendMessage("Provide a member to ban").queue();
+            return;
+        }
 
         String reason = String.join(" ",Arrays.copyOfRange(message,2,message.length));
         try {
@@ -54,5 +58,10 @@ public class ban implements Command {
     @Override
     public String getName() {
         return "ban";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Bans the member from the guild.";
     }
 }

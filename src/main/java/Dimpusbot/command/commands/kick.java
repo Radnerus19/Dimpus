@@ -16,7 +16,7 @@ public class kick implements Command {
 
 
     @Override
-    public void handle(CommandContext ctx){
+    public void handle(CommandContext ctx,String[] args){
         if(!ctx.getMessage().getMember().hasPermission(Permission.BAN_MEMBERS)) return;
         String[] message = ctx.getMessage().getContentRaw().split("\\s+");
         MessageChannel channel = ctx.getMessage().getChannel();
@@ -48,11 +48,16 @@ public class kick implements Command {
                 .setThumbnail(banMember.getUser().getDefaultAvatarUrl())
                 .setFooter("Invoked by "+invokeUser.getName()).setTimestamp(Instant.now())
                 .setColor(Color.red).build()).queue();
-        ctx.getMessage().getGuild().kick(banMember,reason);
+        ctx.getMessage().getGuild().kick(banMember,reason).queue();
     }
 
     @Override
     public String getName() {
         return "kick";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Kicks the member from the guild";
     }
 }

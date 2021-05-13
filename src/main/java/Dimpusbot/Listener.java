@@ -23,6 +23,5 @@ public class Listener extends ListenerAdapter {
         User user = event.getAuthor();
         if(user.isBot() || event.isWebhookMessage()) return;
         manager.handle(event);
-
     }
 }
